@@ -93,9 +93,9 @@ public class MackCube implements Renderer {
 		cube.draw(gl);							//Draw the Cube	
 		
 		//Change rotation factors (nice rotation)
-		xrot += 0.3f;
-		yrot += 0.2f;
-		zrot += 0.4f;
+		xrot += 0.6f;
+		yrot += 0.4f;
+		zrot += 0.8f;
 	}
 
 	/**
