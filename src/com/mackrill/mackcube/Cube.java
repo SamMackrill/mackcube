@@ -116,34 +116,34 @@ public class Cube {
 	private float texture[] = {
 						//Mapping coordinates for the vertices
 						0.0f, 0.0f, 
-						0.0f, 1.0f, 
-						1.0f, 0.0f, 
-						1.0f, 1.0f,
+						0.0f, 0.3333f, 
+						0.3333f, 0.0f, 
+						0.3333f, 0.3333f,
 			
-						0.0f, 0.0f,
-						0.0f, 1.0f, 
-						1.0f, 0.0f,
-						1.0f, 1.0f,
+						0.3333f, 0.0f, 
+						0.3333f, 0.3333f, 
+						0.6667f, 0.0f, 
+						0.6667f, 0.3333f,
 			
-						0.0f, 0.0f, 
-						0.0f, 1.0f, 
+						0.6667f, 0.0f, 
+						0.6667f, 0.3333f, 
 						1.0f, 0.0f, 
-						1.0f, 1.0f,
+						1.0f, 0.3333f,
 			
-						0.0f, 0.0f, 
-						0.0f, 1.0f, 
-						1.0f, 0.0f, 
-						1.0f, 1.0f,
+						0.0f, 0.3333f, 
+						0.0f, 0.6667f, 
+						0.3333f, 0.3333f, 
+						0.3333f, 0.6667f,
 			
-						0.0f, 0.0f, 
-						0.0f, 1.0f, 
-						1.0f, 0.0f, 
-						1.0f, 1.0f,
+						0.3333f, 0.3333f, 
+						0.3333f, 0.6667f, 
+						0.6667f, 0.3333f, 
+						0.6667f, 0.6667f,
 			
-						0.0f, 0.0f, 
-						0.0f, 1.0f, 
-						1.0f, 0.0f, 
-						1.0f, 1.0f, 
+						0.6667f, 0.3333f, 
+						0.6667f, 0.6667f, 
+						1.0f, 0.3333f, 
+						1.0f, 0.6667f,
 									};
 
 	/** The initial indices definition */
@@ -232,7 +232,7 @@ public class Cube {
 	 */
 	public void loadGLTexture(GL10 gl, Context context) {
 		//Get the texture from the Android resource directory
-		InputStream is = context.getResources().openRawResource(R.drawable.smudge2);
+		InputStream is = context.getResources().openRawResource(R.drawable.combo);
 		Bitmap bitmap = null;
 		try {
 			//BitmapFactory is an Android graphics utility for images

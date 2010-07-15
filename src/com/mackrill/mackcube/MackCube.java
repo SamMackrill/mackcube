@@ -11,6 +11,8 @@ import android.content.Context;
 import android.opengl.GLSurfaceView;
 import android.opengl.GLU;
 import android.opengl.GLSurfaceView.Renderer;
+import android.util.FloatMath;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 
@@ -43,6 +45,8 @@ public class MackCube extends GLSurfaceView implements Renderer {
 	
 	/** Cube instance */
 	private Cube cube;	
+	
+	private static final String TAG = "MackCube";
 	
 	/* Rotation values */
 	private float xrot;					//X Rotation
@@ -81,9 +85,14 @@ public class MackCube extends GLSurfaceView implements Renderer {
 	private float oldX;
     private float oldY;
 	private final float TOUCH_SCALE = 0.2f;		//Proved to be good for normal rotation ( NEW )
+	private boolean zooming = false;
 	
 	/** The Activity Context */
 	private Context context;
+
+	private float zoomStartDist;
+
+	private float zoomStartZ;
 	
 	/**
 	 * Instance the Cube object and set the Activity Context 
@@ -246,43 +255,52 @@ public class MackCube extends GLSurfaceView implements Renderer {
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {
 		//
+    	int upperArea = this.getHeight() / 10;
+    	int lowerArea = this.getHeight() - upperArea;
 		float x = event.getX();
         float y = event.getY();
-        
-        //If a touch is moved on the screen
-        if(event.getAction() == MotionEvent.ACTION_MOVE) {
+              
+        switch (event.getAction() & MotionEvent.ACTION_MASK) {
+        case MotionEvent.ACTION_DOWN:
+           break;
+        case MotionEvent.ACTION_UP:
+        	break;
+        case MotionEvent.ACTION_POINTER_UP:
+         	Log.d(TAG, "ACTION_POINTER_UP");
+        	if (zooming) Log.d(TAG, "ZOOM Off");    		
+        	zooming = false;
+       	break;
+        case MotionEvent.ACTION_POINTER_DOWN:
+        	zoomStartDist = spacing(event);
+        	if (zoomStartDist <= 10f) {
+            	if (zooming) Log.d(TAG, "ZOOM Off" );
+        		zooming = false;
+        		break;
+        	}
+        	if (!zooming) Log.d(TAG, "ZOOM On" );
+        	zooming = true;
+        	zoomStartZ = z;
+        	break;
+        case MotionEvent.ACTION_MOVE:
         	//Calculate the change
         	float dx = x - oldX;
 	        float dy = y - oldY;
-        	//Define an upper area of 10% on the screen
-        	int upperArea = this.getHeight() / 10;
         	
         	//Zoom in/out if the touch move has been made in the upper
-        	if(y < upperArea) {
-        		z -= dx * TOUCH_SCALE / 2;
+        	if(zooming) {
+        		float currentDist = spacing(event);
+        		z = zoomStartZ * currentDist / zoomStartDist;
         	
         	//Rotate around the axis otherwise
         	} else {        		
     	        xrot += dy * TOUCH_SCALE;
     	        yrot += dx * TOUCH_SCALE;
-        	}        
+         	}
+        	break;
+     }
+
         
-        //A press on the screen
-        } else if(event.getAction() == MotionEvent.ACTION_UP) {
-        	//Define an upper area of 10% to define a lower area
-        	int upperArea = this.getHeight() / 10;
-        	int lowerArea = this.getHeight() - upperArea;
-        	
-        	//Change the light setting if the lower area has been pressed 
-        	if(y > lowerArea) {
-        		if(light) {
-        			light = false;
-        		} else {
-        			light = true;
-        		}
-        	}
-        }
-        
+       
         //Remember the values
         oldX = x;
         oldY = y;
@@ -290,4 +308,10 @@ public class MackCube extends GLSurfaceView implements Renderer {
         //We handled the event
 		return true;
 	}
+	
+	private float spacing(MotionEvent event) {
+		   float x = event.getX(0) - event.getX(1);
+		   float y = event.getY(0) - event.getY(1);
+		   return FloatMath.sqrt(x * x + y * y);
+		}
 }
