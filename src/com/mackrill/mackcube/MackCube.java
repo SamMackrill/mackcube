@@ -59,7 +59,8 @@ public class MackCube extends GLSurfaceView implements Renderer, OnGestureListen
 	private float xspeed;				//X Rotation Speed ( NEW )
 	private float yspeed;				//Y Rotation Speed ( NEW )
 	
-	private float z = -5.0f;			//Depth Into The Screen ( NEW )
+	private float z = -10.0f;			//Depth Into The Screen ( NEW )
+	private float orbitHeight = 5.0f;			//Depth Into The Screen ( NEW )
 	
 	private int filter = 0;				//Which texture filter? ( NEW )
 	
@@ -191,8 +192,24 @@ public class MackCube extends GLSurfaceView implements Renderer, OnGestureListen
 		gl.glRotatef(xrot, 1.0f, 0.0f, 0.0f);	//X
 		gl.glRotatef(yrot, 0.0f, 1.0f, 0.0f);	//Y
 				
-		cube.draw(gl, filter);					//Draw the Cube	
+		cube.draw(gl, filter);					//Draw the Cube
 		
+		gl.glScalef(0.5f, 0.5f, 0.5f); 			//Scale the Cube to 80 percent, otherwise it would be too large for the screen
+		gl.glRotatef(yrot, 1.0f, 0.0f, 1.0f);	//X
+		gl.glRotatef(xrot, 0.0f, 1.0f, 1.0f);	//Y
+
+		gl.glTranslatef(orbitHeight, 0.0f, 0.0f);			//Move z units into the screen
+		cube.draw(gl, filter);					//Draw the Cube	
+
+		gl.glTranslatef(-orbitHeight*2, 0.0f, 0.0f);			//Move z units into the screen
+		cube.draw(gl, filter);					//Draw the Cube	
+
+		gl.glTranslatef(orbitHeight, orbitHeight, 0.0f);			//Move z units into the screen
+		cube.draw(gl, filter);					//Draw the Cube	
+
+		gl.glTranslatef(0.0f, -orbitHeight*2, 0.0f);			//Move z units into the screen
+		cube.draw(gl, filter);					//Draw the Cube	
+
 		//Change rotation factors
 		xrot += xspeed;
 		yrot += yspeed;
