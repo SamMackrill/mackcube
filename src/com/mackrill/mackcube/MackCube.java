@@ -13,6 +13,8 @@ import android.opengl.GLU;
 import android.opengl.GLSurfaceView.Renderer;
 import android.util.FloatMath;
 import android.util.Log;
+import android.view.GestureDetector;
+import android.view.GestureDetector.OnGestureListener;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 
@@ -41,12 +43,13 @@ import android.view.MotionEvent;
  * 
  * @author Savas Ziplies (nea/INsanityDesign)
  */
-public class MackCube extends GLSurfaceView implements Renderer {
+public class MackCube extends GLSurfaceView implements Renderer, OnGestureListener {
 	
 	/** Cube instance */
 	private Cube cube;	
 	
 	private static final String TAG = "MackCube";
+	private GestureDetector gestureScanner;
 	
 	/* Rotation values */
 	private float xrot;					//X Rotation
@@ -113,7 +116,8 @@ public class MackCube extends GLSurfaceView implements Renderer {
 		this.setFocusableInTouchMode(true);
 		
 		//
-		this.context = context;		
+		this.context = context;
+		gestureScanner = new GestureDetector(this);
 		
 		//
 		ByteBuffer byteBuf = ByteBuffer.allocateDirect(lightAmbient.length * 4);
@@ -254,7 +258,11 @@ public class MackCube extends GLSurfaceView implements Renderer {
 	 */
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {
-		//
+		
+		if (gestureScanner.onTouchEvent(event))
+		{
+			return true;
+		}
     	int upperArea = this.getHeight() / 10;
     	int lowerArea = this.getHeight() - upperArea;
 		float x = event.getX();
@@ -314,4 +322,39 @@ public class MackCube extends GLSurfaceView implements Renderer {
 		   float y = event.getY(0) - event.getY(1);
 		   return FloatMath.sqrt(x * x + y * y);
 		}
+
+	public boolean onDown(MotionEvent e) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+    	Log.d(TAG, "Fling vx=" + velocityX + " vy="+ velocityY);
+		yspeed += velocityX / 10000;
+		xspeed += velocityY / 10000;
+		return true;
+	}
+
+	public void onLongPress(MotionEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX,
+			float distanceY) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	public void onShowPress(MotionEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public boolean onSingleTapUp(MotionEvent e) {
+    	Log.d(TAG, "TAP Up");
+    	xspeed = 0.0f;
+    	yspeed = 0.0f;
+		return true;
+	}
 }
